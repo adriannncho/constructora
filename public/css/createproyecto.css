@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+:root{
+    /* ===== Colors ===== */
+    --body-color: #E4E9F7;
+    --sidebar-color: #FFF;
+    --primary-color: #023877;
+    --primary-color-light: #F6F5FF;
+    --toggle-color: #DDD;
+    --text-color: #000;
+
+    /* ====== Transition ====== */
+    --tran-03: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.3s ease;
+    --tran-05: all 0.3s ease;
+}
+
+.crear{
+    height: auto;
+    width: 700px;
+    margin-left: 400px;
+    align-items: center;
+    justify-content: center;
+    background: var(--sidebar-color);
+    border-radius: 15px;
+    padding: 70px;
+    color: var(--text-color);
+    padding-bottom: 20px;
+    padding-top: 50px;
+}
+
+
+.inputs, .nombre {
+    width: 560px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--sidebar-color);
+    color: var(--text-color);
+}
+
+#drop-area{
+    width: 500px;
+    height: 200px;
+    background: var(--sidebar-color);   
+    border-radius: 10px;
+}
+
+#img-view {
+    width: 100%;
+    border-radius: 10px;
+    border: 2px dashed var(--text-color);
+    text-align: center;
+    justify-content: center; /* Agregado para centrar verticalmente */
+    align-items: center;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+
+
+#img-view i{
+    font-size: 50px;
+    margin-top: 65px;
+}
+
+#img-view p{
+    font-size: 15px;
+    color: var(--text-color);
+    margin-bottom: 40px;
+}
+
+.crearbtn{
+    padding: 8px;
+    background: var(--primary-color);
+    color: var(--sidebar-color);
+    border-radius: 8px;
+    margin-top: 25px;
+    border: transparent;
+    margin-left: 20px;
+}
+
+.cancelar{
+    padding: 8px;
+    background: var(--toggle-color);
+    border-radius: 8px;
+    border: transparent;
+    margin-left: 150px;
+}
+
+.listas{
+    display: flex;
+
+}
+
+.ciudad{
+    margin-left: 35 px;
+}
+
+.estado{
+    width: 265px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--sidebar-color);
+    color: var(--text-color);
+    margin-right: 30px;
+}

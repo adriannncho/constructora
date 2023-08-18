@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+header{
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    position: fixed;
+    height: 80px;
+    background: transparent;
+    z-index: 2;
+}
+
+.container_menu{
+    max-width: 1200px;
+    min-height: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo{
+    height: 100px;
+    padding-left: 125px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.logo img{
+    position: absolute;
+    width: 230px;
+    margin-top: 20px;
+    transition: all 0.5s ease;
+}
+
+/*Transicion de imagen del logo*/
+.logo .scroll {
+    opacity: 0;
+}
+  
+.logo.scroll-top img {
+    opacity: 0;
+}
+  
+.logo.scroll-top .scroll {
+    opacity: 1;
+}
+
+/*Continuacion del codigo*/
+.menu{
+    display: flex;
+    align-items: center;
+}
+
+.menu ul{
+    display: flex;
+    margin-top: 20px;
+}
+
+
+.menu ul li{
+    list-style: none;
+    margin-left: 36px;
+
+}
+
+.menu ul li a{
+    text-decoration: none;
+    font-size: 16px;
+    color: #fff;
+    text-transform: uppercase;
+    transition: all 0.5s ease;
+}
+
+.menu ul li a:hover{
+    padding: 10px 40px;
+    background:#1C5AA5;
+    border-radius:  15px;
+}
+
+#sesion{
+    padding: 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    align-items: center;
+    margin-top: -16px;
+    font-size: 16px;
+    color: #fff;
+    background: transparent;
+    text-transform: uppercase;
+    transition: all 0.5s ease;
+    border: none;
+}
+
+#sesion:hover{
+    background-color: #1C5AA5;
+    transition: all 0.5s ease;
+}
+/*Navegador transicion*/
+.scrol{
+    height: 120px;
+}
+
+.container_menu.active{
+    margin-top: -10px;
+    background: #023877;
+    padding: 5px;
+    max-width: 1600px;
+    min-height: 100%;
+    margin: auto;
+    box-shadow: 0 4px 25px -22px;
+    transition: all 0.5s ease;
+}
+
+.container_menu.menu,
+.container_menu.active{
+    padding-right: 150px;
+}
+
+.container_menu.logo img,
+.container_menu.active{
+    margin-top: -10px;
+    padding-left: 165px;
+}
+
+/*COVER*/
+.container_cover{
+    width: 100%;
+    height: 720px;
+    background-image: url(../storage/imagen/fondo2.jpeg);
+    background-position: 600px right;
+    background-repeat: no-repeat;
+}
+
+.cover{
+    max-width: 1200px;
+    height: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.container_cover .text{
+    max-width: 400px;
+}
+
+.container_cover .text h1{
+    font-size: 36px;
+    font-weight: 600;
+}
+
+.container_cover .text p{
+    font-size: 18px;
+    margin-top: 40px;
+    text-align: justify;
+}
+
+.container_cover .imagensvg img{
+    width: 500px;
+    animation: move-vector 4s linear infinite;
+}
+
+@keyframes move-vector {
+    0%{
+        transform: translateY(15px);
+    }50%{
+        transform: translateY(0px);
+    }100%{
+        transform: translateY(15px);
+    }
+}
