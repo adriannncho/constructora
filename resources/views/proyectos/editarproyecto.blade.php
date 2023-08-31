@@ -72,29 +72,34 @@
 
 
   <section class="home">
-    <div class="text">Crear Proyecto</div>
+    <div class="text">Editar Proyecto</div>
     <div class="crear">
       <form action="{{ route('proyectos.actualizar', $proyecto->IdProyecto) }}" method="post" enctype="multipart/form-data">
         @csrf
         <label for="nombre">Nombre del Proyecto:</label><br>
         <input type="text" id="nombre" name="nombre" class="nombre" value="{{ $proyecto->Nombre }}" required><br><br>
     
-        <label for="">Departamento:</label><br>
-        <select name="depto" id="depto" class="estado">
-            <option value="">Seleccionar departamento</option>
-            @forelse ($departamentos as $departamento)
-            <option value="{{ $departamento->IdDepartamento }}" {{ $departamento->IdDepartamento == $proyecto->IdDepartamento ? 'selected' : '' }}>
-                {{ $departamento->Nombre }}
-            </option>
-            @empty
+        <div class="listas">
+            <div>
+              <label for="">Departamento:</label><br>
+              <select name="depto" id="depto" class="estado">
+                <option value="">Seleccionar departamento</option>
+                @forelse ($departamentos as $departamento)
+                    <option value="{{ $departamento->IdDepartamento}}">{{$departamento->Nombre}} </option>
+                @empty
+                    
+                @endforelse
+              </select> 
     
-            @endforelse
-        </select><br>
-    
-        <label for="">Ciudad</label><br>
-        <select name="ciudad" id="ciudad" class="estado">
-            <option value="">Seleccionar Ciudad</option>
-        </select><br>
+            </div>
+            <div class="ciudad">
+              <label for="">Ciudad</label><br>
+                <select name="ciudad" id="ciudad" class="estado">
+                  <option value="">Seleccionar Ciudad</option>
+                </select><br>
+            </div>
+            
+          </div>
     
         <label for="estado">Estado:</label><br>
         <select id="estado" name="estado" class="inputs" required>

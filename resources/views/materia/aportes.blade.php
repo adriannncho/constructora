@@ -7,7 +7,7 @@
     
     <!----======== CSS ======== -->
     <link rel="stylesheet" href="{{asset('/css/navadmin.css')}}">
-    <link rel="stylesheet" href="{{asset('/css/adminproyec.css')}}">
+    <link rel="stylesheet" href="{{asset('/css/materiadash.css')}}">
     
     <!----===== Boxicons CSS ===== -->
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
@@ -77,49 +77,54 @@
     <section class="home">
         <div class="encabezado">
             <div class="text">Proyectos</div>
-            <div class="conten">
-                <div class="btn-agregar-proyecto">
-                    <a href="{{ route('projects.index', ['status' => 'En planeacion']) }}" class="agregar-proyecto">En Planeación</a>
-                </div>
-                <div class="btn-agregar-proyecto">
-                    <a href="{{ route('projects.index', ['status' => 'En ejecucion']) }}" class="agregar-proyecto">En Ejecución</a>
-                </div>
-                <div class="btn-agregar-proyecto">
-                    <a href="{{ route('projects.index', ['status' => 'Finalizado']) }}" class="agregar-proyecto">Finalizados</a>
-                </div>
-            </div>
-            <div class="btn-agregar-proyecto">
-                <a href="{{route('proyectos.createproyecto')}}" class="agregar-proyecto">Agregar Proyecto</a>
-            </div>
         </div>
-
-        <div class="conten-proye">
-            @forelse ($proyectos as $fila)
-            <div class="proyectos">
-                @if ($fila ->Imagen)
-                <img class="proyejecutado" src="{{asset('storage/imagen/' . $fila->Imagen)}}" alt="">
-                @else 
-                        Sin imagen  
-                @endif
-                <h3 class="tituloejecutado">
-                    {{$fila->Nombre}}
-                </h3><br>
-                <p class="info-proyecto">
-                    {{$fila->Estado}}
-                  </p>
-                <div class="btn">
-                    <a href="{{ route('proyectos.editarproyecto',  ['id' => $fila->IdProyecto]) }}" class="boton">Editar</a>
-                    <a href="{{ route('gestionmateria.index',  ['id' => $fila->IdProyecto])}}" class="boton">Ver más</a>
-                </div>
-                
-               
-              </div>
-            @empty
-            @endforelse
+        <div class="encabezadomat">
+            <canvas id="myChart"></canvas>
         </div>
+        
     </section>
 
     <script src="{{asset('/js/navadmin.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var aportesData = @json($aportes);
+        var sociosData = @json($socios);
 
+        var labels = sociosData.map(socio => socio.Nombre); // Etiquetas de socios, ajusta según tus necesidades
+        var data = aportesData.map(aporte => aporte.AporteTotal);
+
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        // Agrega más colores de fondo aquí
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        // Agrega más colores de borde aquí
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
 </body>
 </html>
+    
+    
+    <canvas id="myChart"></canvas>
+
+
+
+
+
+
+   
+

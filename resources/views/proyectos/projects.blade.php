@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-  <!-- Coding by CodingLab | www.codinglabweb.com -->
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -78,6 +78,20 @@
     <section class="home">
         <div class="encabezado">
             <div class="text">Proyectos</div>
+            <div class="conten">
+                <div class="btn-agregar-proyecto">
+                    <a href="{{ route('projects.index', ['status' => 'En planeacion']) }}" class="agregar-proyecto">En Planeación</a>
+                </div>
+                <div class="btn-agregar-proyecto">
+                    <a href="{{ route('projects.index', ['status' => 'En ejecucion']) }}" class="agregar-proyecto">En Ejecución</a>
+                </div>
+                <div class="btn-agregar-proyecto">
+                    <a href="{{ route('projects.index', ['status' => 'Finalizado']) }}" class="agregar-proyecto">Finalizados</a>
+                </div>
+            </div>
+            <div class="btn-agregar-proyecto">
+                <a href="{{route('proyectos.createproyecto')}}" class="agregar-proyecto">Agregar Proyecto</a>
+            </div>
         </div>
 
         <div class="conten-proye">
