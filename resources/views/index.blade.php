@@ -12,7 +12,11 @@
    <script src="https://kit.fontawesome.com/9100e950df.js" crossorigin="anonymous"></script>
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    </style>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>  
+  </style>
 </head>
 <body>
     <header>
@@ -149,26 +153,45 @@
 
       <!--PROYECTOS REALIZADOS-->
       <section id="proyectos-realizados">
-        <div class="tituloproyectos">
-          <h1>Proyectos Ejecutados</h1>
-        </div>
-        <div class="container-realizado">
-          <div class="proyectos">
-            <img class="proyejecutado" src="storage/imagen/proyectos ejecutados 1.png" alt="">
-            <h3 class="tituloejecutado">San Mathias 1 / Tunja - Boyacá </h3>
+        <div id="proyectosCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner w-100 container" >
+            @foreach($proyectosFinalizados->chunk(3) as $chunk)
+            <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                <div class="row">
+                    @foreach($chunk as $fila) <!-- Aquí iteras sobre $chunk -->
+                        <div class="col-md-4">
+                            <div class="proyectos d-flex flex-column">
+                                @if ($fila->Imagen)
+                                    <img class="proyejecutado" src="{{ asset('storage/imagen/' . $fila->Imagen) }}" alt="">
+                                @else 
+                                    Sin imagen  
+                                @endif
+                                <div class="flex-grow-1">
+                                    <h3 class="tituloejecutado">{{ $fila->Nombre }}</h3><br>
+                                    <p class="info-proyecto">{{ $fila->Estado }}</p>
+                                </div>
+                                <div class="btn">
+                                    <a href="{{ route('proyectos.editarproyecto', ['id' => $fila->IdProyecto]) }}" class="boton">Editar</a>
+                                    <a href="{{ route('gestionmateria.index', ['id' => $fila->IdProyecto]) }}" class="boton">Ver más</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
+        
           </div>
-          <div class="proyectos">
-            <img class="proyejecutado" src="storage/imagen/proyectos ejecutados 2.png" alt="">
-            <h3 class="tituloejecutado">San Mathias 2 / Tunja - Boyacá</h3>
-          </div>
-          <div class="proyectos">
-            <img class="proyejecutado" src="storage/imagen/proyectos ejecutados 3.png" alt="">
-            <h3 class="tituloejecutado">San Nicolas / Tunja - Boyacá</h3>
-          </div>
-        </div>
-        <div class="botones proyecto">
-          <a href="">Ver más</a>
-        </div>
+          <a class="carousel-control-prev" href="#proyectosCarousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon"  aria-hidden="true"></span>
+              <span class="sr-only">Anterior</span>
+          </a>
+          <a class="carousel-control-next" style="background-color: gray " href="#proyectosCarousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Siguiente</span>
+          </a>
+      </div>
+    
       </section>
     </section>
   

@@ -5,6 +5,8 @@ use App\Http\Controllers\ProyectosController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\AporteController;
 use App\Http\Controllers\PedidosController;
+use App\Http\Controllers\DetallePedidoController;
+use App\Models\Proyectos;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +20,9 @@ use App\Http\Controllers\PedidosController;
 */
 
 Route::get('/', function () {
-    return view('index');
+    $proyectosFinalizados = Proyectos::where('Estado', 'Finalizado')->get();
+
+    return view('index', compact('proyectosFinalizados'));
 });
 
 
@@ -49,5 +53,9 @@ Route::get('materia/aportes', [App\Http\Controllers\AporteController::class, 'in
 
 /*Rutas de Pedidos*/
 Route::get('pedidos/indexpedidos/{id}', [App\Http\Controllers\PedidosController::class, 'index'])->name('pedidos.index');
+Route::get('pedidos/createpedido/{id}', [App\Http\Controllers\PedidosController::class, 'create'])->name('pedidos.create');
+Route::post('pedidos/guardar',[App\Http\Controllers\PedidosController::class,'store'])->name('pedidos.store');
 
 
+/* Detalle Pedido*/ 
+Route::get('pedidos/detallepedido/{id}', [App\Http\Controllers\DetallePedidoController::class, 'index'])->name('detallepedido.index');

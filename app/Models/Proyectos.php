@@ -10,5 +10,5 @@ class Proyectos extends Model
     use HasFactory;
 
     protected $primaryKey = 'IdProyecto';
-    protected $fillable = ['IdCiudad', 'IdDepartamento','Nombre', 'Direccion', 'Imagen', 'Estado'];
+    protected $fillable = ['IdCiudad', 'IdDepartamento','Nombre', 'Direccion', 'Imagen', 'Estado', 'AporteTotal'];
 }

@@ -17,7 +17,7 @@ class ProyectosController extends Controller
     public function index()
     {
        
-        $proyectos = Proyectos:: orderBy('Nombre', 'ASC')-> get();
+        $proyectos = Proyectos:: orderBy('Estado', 'ASC')-> get();
         return view('proyectos.gestionproyecto', ['proyectos'=>$proyectos]);
 
     }
@@ -50,7 +50,8 @@ class ProyectosController extends Controller
             'Nombre'=> request('nombre'),
             'Direccion'=> request('dire'), 
             'Imagen'=> $nombrefoto,
-            'Estado' => request('estado')
+            'Estado' => request('estado'),
+            'AporteTotal' => request('presupuesto')
         ]);
 
         return redirect()->route('proyectos.gestionproyecto');
@@ -101,7 +102,8 @@ class ProyectosController extends Controller
             'Nombre' => $request->input('nombre'),
             'Direccion' => $request->input('dire'),
             'Imagen' => $nombrefoto,
-            'Estado' => $request->input('estado')
+            'Estado' => $request->input('estado'),
+            'AporteTotal' => $request->input('presupuesto')
         ]);
 
         return redirect()->route('proyectos.gestionproyecto');

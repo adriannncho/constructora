@@ -14,7 +14,7 @@ class ProjectsController extends Controller
         $status = $request->input('status');
         $proyecto= [];
 
-        if ($status === 'En ejecucion' || $status === 'En planeacion' || $status === 'finalizado') {
+        if ($status === 'En ejecucion' || $status === 'En planeacion' || $status === 'Finalizado') {
             $proyecto = Proyectos::where('estado', $status)->get();
         } else {
             $proyecto = Proyectos::all();

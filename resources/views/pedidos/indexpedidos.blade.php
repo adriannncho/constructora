@@ -12,70 +12,12 @@
     
     <!----===== Boxicons CSS ===== -->
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     
     <title>Proyectos</title>
 </head>
 <body>
-    <nav class="sidebar close">
-        <header>
-            <div class="image-text">
-                <span class="image">
-                    <img src="public/storage/imagen/torre-logo.svg" alt="">
-                </span>
-
-                <div class="text logo-text">
-                    <span class="name">San Mathias</span>
-                    <span class="profession">Constructora</span>
-                </div>
-            </div>
-
-            <i class='bx bx-chevron-right toggle'></i>
-        </header>
-
-        <div class="menu-bar">
-            <div class="menu">
-
-                <li class="search-box">
-                    <i class='bx bx-search icon'></i>
-                    <input type="text" placeholder="Buscar...">
-                </li>
-
-                <ul class="menu-links">
-                    <li class="nav-link">
-                        <a href="#">
-                            <i class='icono bx bx-home-alt icon' ></i>
-                            <span class="text nav-text">Informacion</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="bottom-content">
-                <li class="">
-                    <a href="/index.html">
-                        <i class='bx bx-log-out icon' ></i>
-                        <span class="text nav-text">Salir</span>
-                    </a>
-                </li>
-
-                <li class="mode">
-                    <div class="sun-moon">
-                        <i class='bx bx-moon icon moon'></i>
-                        <i class='bx bx-sun icon sun'></i>
-                    </div>
-                    <span class="mode-text text">Modo oscuro</span>
-
-                    <div class="toggle-switch">
-                        <span class="switch"></span>
-                    </div>
-                </li>
-                
-            </div>
-        </div>
-
-    </nav>
+    @include('pedidos/navinfo')
 
     <section class="home">
         <div class="encabezado">
@@ -84,7 +26,7 @@
             </div>
             
             <div class="btn-agregar-proyecto">
-             <a href="" class="crear"  data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Crear Pedido</a>
+             <a href="{{ route('pedidos.create',  ['id' => $proyecto->IdProyecto])}}" class="crear">Crear Pedido</a>
             </div>
             
             
@@ -116,6 +58,11 @@
                                 @endif
                             </td>
                             <td>
+                                <a href="{{ route('detallepedido.index', ['id' => $fila->IdPedido])}}" class="btn" style="background-color: #023877; color: #FFF">Detalle Pedido</a>
+
+
+                            </td>
+                            <td>
                                 <a href="" class="btn" style="background-color: #F4D03F">Editar</a>
                             </td>
                             <td>
@@ -134,8 +81,7 @@
         
     </section>
 
-    @include('pedidos.crearPedido')
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="{{asset('/js/navadmin.js')}}"></script>
 </body>
 </html>
