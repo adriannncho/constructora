@@ -22,11 +22,17 @@
     <section class="home">
         <div class="encabezado">
             <div class="title-enca">
-                <h2 >Pedidos del Proyecto: <br> {{ $proyecto->Nombre }}</h2>
+                <h2>Pedidos del Proyecto:
+                    @if ($proyecto)
+                        {{ $proyecto->Nombre }}
+                    @endif
+                </h2>
             </div>
             
             <div class="btn-agregar-proyecto">
-             <a href="{{ route('pedidos.create',  ['id' => $proyecto->IdProyecto])}}" class="crear">Crear Pedido</a>
+                @if ($proyecto)
+                    <a href="{{ route('pedidos.create', ['id' => $proyecto->IdProyecto]) }}" class="crear">Crear Pedido</a>
+                @endif
             </div>
             
             

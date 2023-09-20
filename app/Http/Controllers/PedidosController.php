@@ -9,6 +9,7 @@ use App\Models\DetallePedidos;
 use App\Models\Proveedores;
 use App\Models\Administradores;
 use App\Models\MateriaPrimas;
+use App\Models\Medidas;
 use DB;
 use Iluminate\Support\Facades\Storage;
 
@@ -45,66 +46,73 @@ class PedidosController extends Controller
         $concepto = Conceptos::all();
         $administrador = Administradores::all();
         $materia = MateriaPrimas::all();
-        return view('pedidos/createpedido', ['proyectos' => $proyecto, 'proveedores' => $proveedor, 'conceptos' => $concepto,
-                                             'administradores' => $administrador, 'materiaprimas' => $materia]);
+        $medida = Medidas::all();
+        return view('pedidos/createpedido', ['proyecto' => $proyecto, 'proveedores' => $proveedor, 'conceptos' => $concepto,
+                                             'administradores' => $administrador, 'materiaprimas' => $materia, 'medidas' => $medida]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-public function store(Request $request){
-        // Verifica si se ha subido un archivo PDF
-    if ($request->hasFile('poster') && $request->file('poster')->isValid()) {
-        // Obtiene el archivo PDF
-        $archivoPDF = $request->file('poster');
-        // Genera un nombre único para el archivo PDF
-        $nombrePDF = time() . '_' . $archivoPDF->getClientOriginalName();
-
-        // Mueve el archivo PDF a la ubicación deseada (por ejemplo, a la carpeta storage/app/public/pdf)
-        $archivoPDF->storeAs('storage/imagen/', $nombrePDF);
-    }
-
-        // Crear un nuevo pedido
-        $pedido = Pedidos::create([
-            'IdProveedor' => request('proveedor'), // Asegúrate de obtener el IdProveedor adecuadamente
-            'IdProyecto' => $proyecto->IdProyecto,
-            'IdConcepto' => request('concepto'),
-            'FechaHora' => request('fecha'),
-            'Evidencia' => $nombrePDF,
-            'ValorTotal' => 0, // Inicializa el total en 0
-            'Descripcion' => request('descripcion'),
-            'IdAdministrador' => request('admin'), // Ajusta el IdAdministrador según tus necesidades
+    public function store(Request $request)
+    {
+        // Validación de los datos
+        $validatedData = $request->validate([
+            'descripcion' => 'required|string',
+            'proyecto' => 'required|integer',
+            'proveedor' => 'required|integer',
+            'fecha' => 'required|date',
+            'concepto' => 'required|integer',
+            'admin' => 'required|integer',
+            'detallesPedidos' => 'required|array', // Asegura que sea un arreglo
+            'poster' => 'required|file|mimes:pdf|max:2048', // Validación del archivo PDF
+            'valorTotal' => 'required|integer',
         ]);
 
-        // Valores iniciales para el total del pedido
-        $totalPedido = 0;
+       
+        // Procesamiento del archivo PDF
+        if ($request->hasFile('poster')) {
+            $file = $request->file('poster');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
 
-        // Guardar los detalles del pedido
-        foreach (request('materiaPrima') as $key => $materiaPrima) {
-            $detallePedido = DetallePedidos::create([
-                'IdPedido' => $pedido->IdPedido,
-                'IdMateriaPrima' => request('materiaPrima[]')[$key], // Asegúrate de obtener el IdMateriaPrima adecuadamente
-                'Cantidad' => request('cantidad[]')[$key],
-                'ValorUnitario' => request('valorUnitario[]')[$key],
-                'Total' => 0, // Inicializa el total del detalle en 0
-            ]);
+            // Almacena el archivo en el directorio de almacenamiento que elijas
+            Storage::disk('public/storage/imagen')->put($fileName, file_get_contents($file));
 
-            // Calcula el total por detalle y agrega al total del pedido
-            $totalDetalle = $detallePedido->Cantidad * $detallePedido->ValorUnitario;
-            $totalPedido += $totalDetalle;
-
-            // Actualiza el total del detalle
-            $detallePedido->Total = $totalDetalle;
-            $detallePedido->save();
+            // Guarda el nombre del archivo en la base de datos
+            $validatedData['poster'] = $fileName;
         }
 
-        // Actualiza el total del pedido con la suma de los totales de detalles
-        $pedido->ValorTotal = $totalPedido;
+        // Crear un nuevo pedido con los datos validados
+        $pedido = new Pedidos([
+            'descripcion' => $validatedData['descripcion'],
+            'proyecto' => $validatedData['proyecto'],
+            'proveedor' => $validatedData['proveedor'],
+            'fecha' => $validatedData['fecha'],
+            'concepto' => $validatedData['concepto'],
+            'admin' => $validatedData['admin'],
+            'poster' => $validatedData['poster'], // Nombre del archivo PDF
+            'valor' => $validatedData['valorTotal'],
+        ]);
+
+        // Guarda el pedido en la base de datos
         $pedido->save();
 
-        return redirect()->route('pedidos.index');
-}
+        // Procesa los detalles del pedido y guárdalos en la base de datos
+        foreach ($validatedData['detallesPedidos'] as $detalle) {
+            $detallePedido = new DetallePedidos([
+                'materia_prima' => $detalle['materiaPrima'],
+                'cantidad' => $detalle['cantidad'],
+                'valor_unitario' => $detalle['valorUnitario'],
+                'total' => $detalle['total'],
+            ]);
 
+            // Asocia el detalle con el pedido recién creado
+            $pedido->detallesPedidos()->save($detallePedido);
+        }
+
+        // Redirección y mensaje de éxito
+        return redirect()->route('proyectos.gestionproyecto', ['id' => $pedido->IdPedido])->with('success', 'Pedido creado exitosamente');
+    }
 
     /**
      * Display the specified resource.

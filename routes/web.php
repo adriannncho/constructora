@@ -54,7 +54,7 @@ Route::get('materia/aportes', [App\Http\Controllers\AporteController::class, 'in
 /*Rutas de Pedidos*/
 Route::get('pedidos/indexpedidos/{id}', [App\Http\Controllers\PedidosController::class, 'index'])->name('pedidos.index');
 Route::get('pedidos/createpedido/{id}', [App\Http\Controllers\PedidosController::class, 'create'])->name('pedidos.create');
-Route::post('pedidos/guardar',[App\Http\Controllers\PedidosController::class,'store'])->name('pedidos.store');
+Route::post('pedidos/store', [App\Http\Controllers\PedidosController::class,'store'])->name('pedidos.store');
 
 
 /* Detalle Pedido*/ 

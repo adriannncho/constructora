@@ -12,14 +12,14 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 <body>
-  @include('proyectos/navproyectos')
+  @include('pedidos/navinfo')
 
 
   <section class="home">
-    <div class="text">Crear Pedido: <br> {{ $proyecto->Nombre }}</div>
+    <div class="text">Crear Pedido:</div>
 
     <div class="crear">
-      <form action="{{ route('pedidos.store', ['id' => $proyecto->IdProyecto]) }}" method="post" enctype="multipart/form-data">
+      <form id="pedidoForm">
         @csrf
           <div class="contenido">
             <div class="formulario">
@@ -27,6 +27,8 @@
                 <label for="descripcion"  class="form-label">Descripción:</label>
                 <textarea name="descripcion" id="descripcion" class="nombre form-control" rows="3" required></textarea>
             </div>
+            <input type="hidden" name="proyecto" value="{{ $proyecto->IdProyecto }}">
+
             <div class="mb-3">
               <select class="form-select" name="proveedor" id="proveedor" aria-label="Default select example">
                 <option value="">Seleccionar proveedor</option>
@@ -53,7 +55,7 @@
                     
                 @endforelse
                 </select>
-              </div><br>  
+              </div> 
               <div class="mb-3">
                 <select class="form-select" name="admin" id="admin" aria-label="Default select example">
                   <option value="">Seleccionar administrador</option>
@@ -63,7 +65,10 @@
                     
                 @endforelse
                 </select>
-              </div> <br>
+              </div>
+              <div class="input-group mb-3">
+                <input type="number" name="valorTotal" id="valorTotal" class="form-control w-75" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Valor Total">
+            </div>
               <div class="mb-3">
                 <label for="poster" class="form-label">Factura Pedido:</label>
                 <input type="file" name="poster" id="poster" class="form-control" accept="application/pdf">
@@ -71,36 +76,50 @@
             </div>  
           </div><br><br>
           <h3>Detalle Pedido</h3><br>
+
           <!-- Campos de entrada para los detalles de pedido -->
           <div class="detalle d-flex">
-            <div class="input-group d-block">
-              <label for="nombre">Materia Prima:</label><br>
-              <select class="form-select w-75" name="materiaPrima[]" id="materiaPrima[]" aria-label="Default select example">
-                <option value="">Seleccionar Material</option>
-              @forelse ($materiaprimas as $materia)
-                  <option value="{{ $materia->IdMateriaPrima}}">{{$materia->Nombre}} </option>
-              @empty
-                  
-              @endforelse
-              </select>
-            </div>  
-            <div class="input-group mb-3 d-block">
-                <label for="nombre">Cantidad:</label><br>
-                <input type="number" name="cantidad[]" id="cantidad[]" class="form-control w-75" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              <div class="input-group d-block">
+                  <label for="materiaPrima">Materia Prima :</label><br>
+                  <select class="form-select w-75" name="materiaPrima[]" aria-label="Default select example">
+                      <option value="">Seleccionar</option>
+                      @forelse ($materiaprimas as $materia)
+                      <option value="{{ $materia->IdMateriaPrima }}">{{ $materia->Nombre }} </option>
+                      @empty
+                      @endforelse
+                  </select>
+              </div>
+              <div class="input-group mb-3 d-block">
+                  <label for="cantidad">Cantidad :</label><br>
+                  <input type="number" name="cantidad[]" class="form-control w-75" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+              <div class="input-group d-block">
+                <label for="materiaPrima">Medida:</label><br>
+                <select class="form-select w-75" name="medida[]" aria-label="Default select example">
+                    <option value="">Seleccionar</option>
+                    @forelse ($medidas as $medida)
+                    <option value="{{ $medida->IdMedida }}">{{ $medida->Simbolo }} </option>
+                    @empty
+                    @endforelse
+                </select>
             </div>
-            <div class="input-group mb-3 d-block">
-                <label for="nombre">Valor Unitario:</label><br>
-                <input type="number" name="valorUnitario[]" id="valorUnitario[]" class="form-control w-75" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            </div>
-            <button type="button" class="btn" style="height: 40px; color: #fff; background: #5b95d7; margin-top: 20px; color: #fff" onclick="agregarDetalle()">Guardar</button>
+              <div class="input-group mb-3 d-block">
+                  <label for="valorUnitario">Valor Unitario :</label><br>
+                  <input type="number" name="valorUnitario[]" class="form-control w-75" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+              <div class="input-group mb-3 d-block">
+                  <label for="total">Valor :</label><br>
+                  <input type="number" name="total[]" class="form-control w-75" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+              <button type="button" class="btn" style="height: 40px; color: #fff; background: #5b95d7; margin-top: 20px; color: #fff" onclick="agregarDetalle()">Guardar</button>
           </div>
-
           <!-- Tabla para mostrar los detalles de pedido -->
           <table id="tabla-detalles" class="table">
             <thead>
                 <tr>
                     <th>Materia Prima</th>
                     <th>Cantidad</th>
+                    <th>Medida</th>
                     <th>Valor Unitario</th>
                     <th>Total</th>
                 </tr>
@@ -112,66 +131,181 @@
 
         <div class="botones">
           <button type="submit" class="cancelar"><a href="{{ route('proyectos.gestionproyecto')}}" style="text-decoration: none">Cancelar</a></button>
-          <button type="submit" class="crearbtn">Crear Proyecto</button>
+          <button type="submit" class="crearbtn" onclick="enviarFormulario()">Crear Pedido</button>
         </div>
       </form>
+      
     </div>
-  </section>
+  </section>    
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-
 <script src="{{asset('/js/ciudades.js')}}"></script>  
 <script src="{{asset('/js/navadmin.js')}}"></script>
-<script src="{{asset('/js/cargarimagen.js')}}"></script>
+
+
 <script>
-  let detalleTable = document.getElementById("tabla-detalles").getElementsByTagName('tbody')[0];
+    let materiaPrimaData = {}; // Un diccionario para almacenar los nombres de materia prima
+    let medidaData = {}; // Un diccionario para almacenar los símbolos de medida
 
-function agregarDetalle() {
-  // Obtener los valores ingresados
-  let materiaPrima = document.querySelectorAll("select[name='materiaPrima[]']");
-  let cantidad = document.querySelectorAll("input[name='cantidad[]']");
-  let valorUnitario = document.querySelectorAll("input[name='valorUnitario[]']");
-  
-  // Crear una nueva fila de tabla por cada conjunto de valores
-  for (let i = 0; i < materiaPrima.length; i++) {
-    let materiaPrimaValue = materiaPrima[i].value;
-    let cantidadValue = parseFloat(cantidad[i].value);
-    let valorUnitarioValue = parseFloat(valorUnitario[i].value);
+    // Llena los diccionarios con datos al cargar la página (por ejemplo, en el documento.ready)
+    document.addEventListener("DOMContentLoaded", function() {
+      @foreach ($materiaprimas as $materia)
+        materiaPrimaData[{{ $materia->IdMateriaPrima }}] = "{{ $materia->Nombre }}";
+      @endforeach
 
-    // Calcular el total
-    let total = cantidadValue * valorUnitarioValue;
+      @foreach ($medidas as $medida)
+        medidaData[{{ $medida->IdMedida }}] = "{{ $medida->Simbolo }}";
+      @endforeach
+    });
 
-    // Crear una nueva fila de tabla
-    let newRow = detalleTable.insertRow();
-    
-    // Agregar celdas con los valores
-    let cell1 = newRow.insertCell(0);
-    let cell2 = newRow.insertCell(1);
-    let cell3 = newRow.insertCell(2);
-    let cell4 = newRow.insertCell(3);
-    let cell5 = newRow.insertCell(4); // Agregar una nueva celda para el botón de eliminar
-    
-    cell1.innerHTML = materiaPrimaValue;
-    cell2.innerHTML = cantidadValue;
-    cell3.innerHTML = valorUnitarioValue;
-    cell4.innerHTML = total.toFixed(2); // Redondear el total a dos decimales
-    cell5.innerHTML = '<button type="button" class="btn btn-danger" onclick="eliminarDetalle(this)">Eliminar</button>';
-    
-    // Limpiar los campos de entrada
-    materiaPrima[i].value = "";
-    cantidad[i].value = "";
-    valorUnitario[i].value = "";
-  }
+    let detalleTable = document.getElementById("tabla-detalles").getElementsByTagName('tbody')[0];
+
+    function agregarDetalle() {
+
+      console.log("Holaaa");
+      // Obtener los valores ingresados
+      let materiaPrima = document.querySelectorAll("select[name='materiaPrima[]']");
+      let cantidad = document.querySelectorAll("input[name='cantidad[]']");
+      let medida = document.querySelectorAll("select[name='medida[]']");
+      let valorUnitario = document.querySelectorAll("input[name='valorUnitario[]']");
+      let total = document.querySelectorAll("input[name='total[]']");
+
+      // Crear una nueva fila de tabla por cada conjunto de valores
+      for (let i = 0; i < materiaPrima.length; i++) {
+        let materiaPrimaID = materiaPrima[i].value;
+        let cantidadValue = parseFloat(cantidad[i].value);
+        let medidaID = medida[i].value;
+        let valorUnitarioValue = parseFloat(valorUnitario[i].value);
+        let totalValue = cantidadValue * valorUnitarioValue; // Calcular el total
+
+        // Buscar el nombre de la materia prima y el símbolo de la medida en los diccionarios
+        let materiaPrimaName = materiaPrimaData[materiaPrimaID];
+        let medidaSymbol = medidaData[medidaID];
+
+        // Crear una nueva fila de tabla
+        let newRow = detalleTable.insertRow();
+
+        // Agregar celdas con los valores
+        let cell1 = newRow.insertCell(0);
+        let cell2 = newRow.insertCell(1);
+        let cell3 = newRow.insertCell(2);
+        let cell4 = newRow.insertCell(3);
+        let cell5 = newRow.insertCell(4);
+        let cell6 = newRow.insertCell(5); // Agregar una nueva celda para el botón de eliminar
+
+        cell1.innerHTML = materiaPrimaName; // Mostrar el nombre de la materia prima
+        cell2.innerHTML = cantidadValue;
+        cell3.innerHTML = medidaSymbol; // Mostrar el símbolo de la medida
+        cell4.innerHTML = valorUnitarioValue;
+        cell5.innerHTML = totalValue.toFixed(2); // Redondear el total a dos decimales
+        cell6.innerHTML = '<button type="button" class="btn btn-danger" onclick="eliminarDetalle(this)">Eliminar</button>';
+
+        // Limpiar los campos de entrada
+        materiaPrima[i].value = "";
+        cantidad[i].value = "";
+        medida[i].value = "";
+        valorUnitario[i].value = "";
+        total[i].value = "";
+      }
+    }
+
+    // Función para eliminar una fila de la tabla
+    function eliminarDetalle(button) {
+      // Obtener la fila que contiene el botón
+      let row = button.closest("tr");
+      row.parentNode.removeChild(row);
+    }
+
+    function enviarFormulario() {
+      // Obtener los datos del formulario
+      let descripcion = document.getElementById('descripcion').value;
+      let proveedor = document.getElementById('proveedor').value;
+      let fecha = document.getElementById('fecha').value;
+      let concepto = document.getElementById('concepto').value;
+      let admin = document.getElementById('admin').value;
+      let valorTotal = document.getElementById('valorTotal').value;
+
+      // Obtener el archivo PDF
+      let poster = document.getElementById('poster').files[0];
+
+      console.log("Descripción:", descripcion);
+      console.log("Proveedor:", proveedor);
+      console.log("Fecha:", fecha);
+      console.log("Concepto:", concepto);
+      console.log("Administrador:", admin);
+      console.log("Archivo:", poster);
+      console.log("Valor:", valorTotal);
+
+      // Crear un objeto FormData para enviar datos y archivos
+      let formData = new FormData();
+      formData.append('_token', '{{ csrf_token() }}');
+      formData.append('descripcion', descripcion);
+      formData.append('proyecto', '{{ $proyecto->IdProyecto }}');
+      formData.append('proveedor', proveedor);
+      formData.append('fecha', fecha);
+      formData.append('concepto', concepto);
+      formData.append('admin', admin);
+      formData.append('poster', poster);
+      formData.append('valorTotal', valorTotal);
+
+      // Obtener los datos de la tabla (detalles de pedido)
+      let filas = document.querySelectorAll('#tabla-detalles tbody tr');
+      let detallesPedidos = [];
+
+      filas.forEach(function (fila) {
+        let celdas = fila.querySelectorAll('td');
+        let materiaPrima = celdas[0].textContent;
+        let cantidad = parseFloat(celdas[1].textContent);
+        let medida = celdas[2].textContent;
+        let valorUnitario = parseFloat(celdas[3].textContent);
+        let total = parseFloat(celdas[4].textContent);
+
+        // Imprimir los valores de cada fila en la consola
+        console.log("Materia Prima:", materiaPrima);
+        console.log("Cantidad:", cantidad);
+        console.log("Medida:", medida);
+        console.log("Valor Unitario:", valorUnitario);
+        console.log("Total:", total);
+
+        // Agregar los datos de cada fila a un objeto
+        let filaDatos = {
+          materiaPrima: materiaPrima,
+          cantidad: cantidad,
+          medida: medida,
+          valorUnitario: valorUnitario,
+          total: total
+        };
+
+        detallesPedidos.push(filaDatos);
+      });
+
+      // Agregar detalles de pedido al FormData
+      formData.append('detallesPedidos', JSON.stringify(detallesPedidos));
+
+      // Realizar la solicitud AJAX de tipo POST
+      $.ajax({
+        url: '{{ route('pedidos.store') }}', // Reemplaza con la URL correcta de tu controlador
+        type: 'POST',
+        data: formData,
+        processData: false, // Evitar que jQuery procese los datos
+        contentType: false, // Evitar que jQuery configure el encabezado Content-Type
+        success: function (response) {
+          // Manejar la respuesta del controlador si es necesario
+          console.log('Respuesta del controlador:', response);
+
+          // Mostrar un mensaje de éxito al usuario
+          alert('Pedido creado exitosamente');
+        },
+        error: function (error) {
+          console.error('Error al enviar datos del formulario a Laravel:', error);
+          // Mostrar un mensaje de éxito al usuario
+          alert('Error al enviar los datos');
+        }
+      });
 }
-
-function eliminarDetalle(button) {
-  // Obtener la fila que contiene el botón
-  let row = button.closest("tr");
-  row.parentNode.removeChild(row);
-}
-</script>
+  </script>
 
 </body>
 </html>

@@ -21,7 +21,7 @@
                 <i class='bx bx-search icon'></i>
                 <input type="text" placeholder="Buscar...">
             </li>
-            <ul class="menu-links">
+            <ul class="menu-links" style="padding-left: 0px">
                 <li class="nav-link">
                     <a href="#">
                         <i class='bx bx-arrow-back icon' ></i>
@@ -29,7 +29,7 @@
                     </a>
                 </li>
             </ul>
-            <ul class="menu-links">
+            <ul class="menu-links" style="padding-left: 0px">
                 <li class="nav-link">
                     <a href="#">
                         <i class='bx bx-trending-up icon'></i>
@@ -37,15 +37,17 @@
                     </a>
                 </li>
             </ul>
-            <ul class="menu-links">
+            <ul class="menu-links" style="padding-left: 0px">
+                @if ($proyecto)
                 <li class="nav-link">
                     <a href="{{ route('pedidos.index', ['id' => $proyecto->IdProyecto]) }}">
                         <i class='bx bx-building icon'></i>
                         <span class="text nav-text">Pedidos</span>
                     </a>
                 </li>
+                @endif
             </ul>
-            <ul class="menu-links">
+            <ul class="menu-links" style="padding-left: 0px">
                 <li class="nav-link">
                     <a href="#">
                         <i class='bx bx-brush icon'></i>
